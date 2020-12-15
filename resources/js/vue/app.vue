@@ -1,7 +1,7 @@
 <template>
     <div class="container flex flex-col justify-center h-screen bg-gray-200 w-full px-3">
-        <add-item-form />
-        <all-list-items :items ="items" />
+        <add-item-form v-on:reloadList="getItems()" />
+        <all-list-items :items ="items" v-on:reloadList="getItems()" />
     </div>
 
 </template>

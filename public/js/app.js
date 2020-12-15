@@ -1950,6 +1950,8 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (response) {
         if (response.status == 201) {
           _this.item.name = "";
+
+          _this.$emit("reloadList");
         }
       })["catch"](function (error) {//
       });
@@ -2053,21 +2055,32 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["item"],
   methods: {
     deleteList: function deleteList() {
-      console.log("this was pressed");
-    },
-    changeStatus: function changeStatus() {
       var _this = this;
 
-      this.item.completed = !this.item.completed;
+      axios["delete"]('/api/item/' + this.item.id, {
+        item: this.item
+      }).then(function (res) {
+        if (res.staus == 200) {
+          _this.$emit("ItemChanged");
+        }
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    },
+    changeStatus: function changeStatus() {
+      var _this2 = this;
+
+      // this.item.completed = ! this.item.completed;
       axios.put('/api/item/' + this.item.id, {
         item: this.item
       }).then(function (response) {
         if (response.status == 200) {
-          _this.$emit('ItemChanged');
+          _this2.$emit('ItemChanged');
         }
       })["catch"](function (error) {
         console.log(error);
@@ -20472,7 +20485,16 @@ var render = function() {
       return _c(
         "div",
         { key: index, staticClass: "m-2 flex flex-row" },
-        [_c("list-item", { attrs: { item: item } })],
+        [
+          _c("list-item", {
+            attrs: { item: item },
+            on: {
+              ItemChanged: function($event) {
+                return _vm.$emit("reloadList")
+              }
+            }
+          })
+        ],
         1
       )
     }),
@@ -20508,9 +20530,22 @@ var render = function() {
         "container flex flex-col justify-center h-screen bg-gray-200 w-full px-3"
     },
     [
-      _c("add-item-form"),
+      _c("add-item-form", {
+        on: {
+          reloadList: function($event) {
+            return _vm.getItems()
+          }
+        }
+      }),
       _vm._v(" "),
-      _c("all-list-items", { attrs: { items: _vm.items } })
+      _c("all-list-items", {
+        attrs: { items: _vm.items },
+        on: {
+          reloadList: function($event) {
+            return _vm.getItems()
+          }
+        }
+      })
     ],
     1
   )

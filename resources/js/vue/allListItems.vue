@@ -1,7 +1,7 @@
 <template>
     <div class="items">
         <div v-for="(item,index) in items" :key="index" class="m-2 flex flex-row">
-            <list-item  :item=item />
+            <list-item  :item=item v-on:ItemChanged="$emit('reloadList')" />
         </div>
 
     </div>

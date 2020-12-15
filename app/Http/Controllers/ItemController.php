@@ -94,7 +94,7 @@ class ItemController extends Controller
         $thisItem = Item::find($id);
 
         if ($thisItem) {
-            $thisItem->completed = $request->completed ? true : false;
+            $thisItem->completed =  !$thisItem->completed;
             $thisItem->completed_at = $request->completed ? Carbon::now() : null;
             $thisItem->save();
             return $thisItem;

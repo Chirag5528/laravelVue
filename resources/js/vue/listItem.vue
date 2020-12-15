@@ -3,6 +3,7 @@
         <label class="inline-flex items-center">
             <input type="checkbox" class="form-checkbox" @click="changeStatus()" :checked="item.completed ? true: false"  :v-model="item.completed">
             <span :class=" [ item.completed ? 'completed':'', 'ml-2' ] ">{{ item.name }}</span>
+            <!-- <span :class=" [ item.completed ? 'completed':'', 'ml-2' ] ">Status {{ item.completed }}</span> -->
             <span class="ml-2 p-1 bg-red-500 text-white fa fa-trash" @click="deleteList()" ></span>
         </label>
     </div>
@@ -12,10 +13,19 @@ export default{
     props:["item"],
     methods:{
         deleteList(){
-            console.log("this was pressed");
+            axios.delete( '/api/item/'+this.item.id,{
+                item:this.item
+            }).then( res => {
+                if( res.staus == 200 ){
+                    this.$emit("ItemChanged");
+                }
+            }).catch( err => {
+                console.log(err);
+            })
         },
         changeStatus() {
-            this.item.completed = ! this.item.completed;
+            // this.item.completed = ! this.item.completed;
+
             axios.put('/api/item/' + this.item.id, {
                 item: this.item
             }).then( response => {
